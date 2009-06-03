@@ -1,5 +1,5 @@
 import unittest
-import postparser
+import Post
 from StringIO import StringIO
 
 class TestParser(unittest.TestCase):
@@ -9,7 +9,7 @@ Tags: hello world, beginning
 
 Hey fellas! I'm just out here, saying hello world! :)
         """
-        p = postparser.post_from_file(StringIO(file))
+        p = Post.Post(StringIO(file))
         self.assertEqual(p.title, "Hello World!")
         self.assertEqual(len(p.meta), 1)
         self.assertEqual(p.meta['Tags'], "hello world, beginning")
