@@ -22,6 +22,3 @@ Hey fellas! I'm just out here, saying hello world! :)
         self.assertEqual(len(p.meta), 1)
         self.assertEqual(p.meta['Tags'], "hello world, beginning")
         self.assertEqual(p.content, "Hey fellas! I'm just out here, saying hello world! :)")
-
-if __name__ == '__main__':
-    r = unittext.TestRunner
