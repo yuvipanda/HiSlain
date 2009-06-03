@@ -22,4 +22,4 @@ class Post():
             self.content = file.read().rstrip()
 
 def read_config(file):
-    return yaml.load
+    return yaml.load(file)
