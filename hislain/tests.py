@@ -2,16 +2,8 @@ import unittest
 import postparser
 from StringIO import StringIO
 
-valid_posts = [        
-        """Hello World!
-        Tags: hello world, beginning
-
-        Hey fellas! I'm just out here, saying hello world :)
-        """
-        ]
-
 class TestParser(unittest.TestCase):
-    def testparse(self):
+    def test_basic(self):
         file = """Hello World!
 Tags: hello world, beginning
 
