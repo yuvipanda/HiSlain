@@ -1,4 +1,4 @@
-import re
+import yaml
 
 class Post():
     title = ""
@@ -20,3 +20,6 @@ class Post():
                 l = file.readline()
 
             self.content = file.read().rstrip()
+
+def read_config(file):
+    return yaml.load
