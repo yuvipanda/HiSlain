@@ -1,8 +1,10 @@
 import unittest
-import hislain 
+import os
 from StringIO import StringIO
 
-class TestPostParser(unittest.TestCase):
+import hislain 
+
+class TestPost(unittest.TestCase):
     def test_basic(self):
         file = """Hello World!
 Tags: hello world, beginning
@@ -14,6 +16,15 @@ Hey fellas! I'm just out here, saying hello world! :)
         self.assertEqual(len(p.meta), 1)
         self.assertEqual(p.meta['Tags'], "hello world, beginning")
         self.assertEqual(p.content, "Hey fellas! I'm just out here, saying hello world! :)")
+
+class TestBlog(unittest.TestCase):
+    def test_basic(self):
+        test_dir = os.path.join(os.path.dirname(__file__), "sample-blog")
+        blog = hislain.Blog(test_dir)
+
+        self.assertEqual(len(blog.posts), 1)
+        self.assertEqual(blog.settings['theme'], 'simpl')
+        self.assertEqual(len(blog.settings), 1)
 
 class TestConfig(unittest.TestCase):
     def test_basic(self):
