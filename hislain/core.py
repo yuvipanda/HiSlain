@@ -2,6 +2,7 @@ import yaml
 import os
 
 from jinja2 import Environment, FileSystemLoader
+
 class Post():
     def __init__(self, file=None):
         self.meta = {}
@@ -23,7 +24,7 @@ class Post():
             print self.meta
             self.content = file.read().rstrip()
     
-    def to_post(self, file):
+    def to_file(self, file):
         file.write(self.title + '\n')
         
         for k, v in self.meta.items():

@@ -2,7 +2,7 @@ import unittest
 import os
 from StringIO import StringIO
 
-import hislain 
+import core 
 
 class TestPost(unittest.TestCase):
     def test_basic(self):
@@ -10,7 +10,7 @@ class TestPost(unittest.TestCase):
 Tags: hello world, beginning
 
 Hey fellas! I'm just out here, saying hello world! :)"""
-        p = hislain.Post(StringIO(file))
+        p = core.Post(StringIO(file))
         self.assertEqual(p.title, "Hello World!")
         self.assertEqual(len(p.meta), 1)
         self.assertEqual(p.meta['Tags'], "hello world, beginning")
@@ -21,18 +21,18 @@ Hey fellas! I'm just out here, saying hello world! :)"""
 Tags: hello world, beginning
 
 Hey fellas! I'm just out here, saying hello world! :)"""
-        p = hislain.Post()
+        p = core.Post()
         p.title = "Hello World!"
         p.meta['Tags'] = "hello world, beginning"
         p.content = "Hey fellas! I'm just out here, saying hello world! :)"
         so = StringIO()
-        p.to_post(so)
+        p.to_file(so)
         self.assertEqual(so.getvalue(),output)
 
 class TestBlog(unittest.TestCase):
     def test_basic(self):
         test_dir = os.path.join(os.path.dirname(__file__), "sample-blog")
-        blog = hislain.Blog(test_dir)
+        blog = core.Blog(test_dir)
 
         self.assertEqual(len(blog.posts), 1)
         self.assertEqual(blog.settings['theme'], 'simpl')
@@ -49,7 +49,7 @@ links:
     - name: Scoble
       url: http://scobleizer.com"""
 
-        conf = hislain.read_config(StringIO(file))
+        conf = core.read_config(StringIO(file))
         
         self.assertEqual(len(conf), 3)        
         self.assertEqual(conf['name'], 'YuviSense')
