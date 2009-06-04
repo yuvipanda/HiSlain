@@ -9,13 +9,25 @@ class TestPost(unittest.TestCase):
         file = """Hello World!
 Tags: hello world, beginning
 
-Hey fellas! I'm just out here, saying hello world! :)
-        """
+Hey fellas! I'm just out here, saying hello world! :)"""
         p = hislain.Post(StringIO(file))
         self.assertEqual(p.title, "Hello World!")
         self.assertEqual(len(p.meta), 1)
         self.assertEqual(p.meta['Tags'], "hello world, beginning")
         self.assertEqual(p.content, "Hey fellas! I'm just out here, saying hello world! :)")
+
+    def test_write(self):
+        output = """Hello World!
+Tags: hello world, beginning
+
+Hey fellas! I'm just out here, saying hello world! :)"""
+        p = hislain.Post()
+        p.title = "Hello World!"
+        p.meta['Tags'] = "hello world, beginning"
+        p.content = "Hey fellas! I'm just out here, saying hello world! :)"
+        so = StringIO()
+        p.to_post(so)
+        self.assertEqual(so.getvalue(),output)
 
 class TestBlog(unittest.TestCase):
     def test_basic(self):

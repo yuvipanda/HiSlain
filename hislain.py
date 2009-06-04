@@ -22,6 +22,17 @@ class Post():
 
             print self.meta
             self.content = file.read().rstrip()
+    
+    def to_post(self, file):
+        file.write(self.title + '\n')
+        
+        for k, v in self.meta.items():
+            file.write(("%s: %s" % (k, v)) + '\n')
+
+        file.write('\n')
+
+        file.write(self.content)
+
 
 class Blog():
     def __init__(self, dir=None):
