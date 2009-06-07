@@ -1,19 +1,22 @@
 {% macro single_post(post) %}
-<div class="post-container">
-    <h3 class="post-title">
-        <a href="{{ post.meta.permalink }}">{{ post.title|escape }}</a>
-    </h3>
-    <div class="post-meta">
-        <div class='post-meta-tags'>
+<div class="post">
+    <div class="content">
+   <h3 class="entry-title">
+       <a href="{{ post.meta.permalink }}" rel="bookmark">{{ post.title|escape }}</a>
+   </h3>
+   <div class="entry-content">
+       {{ post.content }}
+   </div>
+   <div class="entry-meta">
+        <div class='entry-tags'>
             Tags: {% for t in post.meta.tags %}
-            <a href="/tags/{{ t }}">{{ t }}</a>
+            <a rel="tag" href="/tags/{{ t }}">{{ t }}</a>
             {% endfor %}
         </div>
-        <div class='post-meta-published'>
-            Published at {{ post.meta.published }}
+        <div class='entry-date'>
+            Published at {{ post.meta.published.strftime("%A %d %B '%y") }}
         </div>
     </div>
-    <div class="post-content">
-        {{ post.content }}
-    </div>
+</div>
+</div>
 {% endmacro %}

@@ -5,4 +5,4 @@ b = Blog('sample-blog')
 p = b.posts[0]
 
 
-publish_posts(b.posts, b.env.get_template('home.html'), b.settings, 'home') 
+publish_posts(b.posts, b.env.get_template('posts.html'), b.settings, 'home') 

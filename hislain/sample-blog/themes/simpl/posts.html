@@ -6,9 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="posts">
     {% for p in posts %}
         {{ single_post (p) }}
-        {% endfor %}
-</div>
+    {% endfor %}
 {% endblock %}
