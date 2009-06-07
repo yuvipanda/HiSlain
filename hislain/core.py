@@ -19,13 +19,20 @@ post_meta_defaults = {
 def _parsetype(type, data):
     if type is datetime:
         return parser.parse(data)
-    elif type is str:
+    elif type is unicode:
         return unicode(data, encoding='UTF-8')
     elif type is list:
         return [i.strip() for i in data.split(',')]
     else:
         return data
 
+def _dumptype(type, data):
+    if type is datetime:
+        return data.isoformat()
+    elif type is list:
+        return ', '.join(data)
+    else:
+        return data
 
 class Post():
     def __init__(self, file=None):
@@ -45,8 +52,8 @@ class Post():
                 self.meta[key] = value
                 l = file.readline()
 
-            self.raw_content = file.read().rstrip()
-            self.content = markdown.markdown(self.raw_content)
+            self.content_raw = file.read().rstrip()
+            self.content = markdown.markdown(self.content_raw)
 
             # Set in default values, and parse according to type
             for k, v in post_meta_defaults.items():
@@ -62,11 +69,13 @@ class Post():
         file.write(self.title + '\n')
         
         for k, v in self.meta.items():
-            file.write(("%s: %s" % (k, v)) + '\n')
+            if k in post_meta_defaults:
+                v = _dumptype(post_meta_defaults[k][0], v)
+                file.write(("%s: %s" % (k, v)) + '\n')
 
         file.write('\n')
 
-        file.write(self.raw_content)
+        file.write(self.content_raw)
 
 class Blog():
     def __init__(self, dir=None):

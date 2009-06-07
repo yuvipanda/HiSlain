@@ -3,28 +3,28 @@ import os
 from StringIO import StringIO
 
 import core 
+import hislain_script
 
 class TestPost(unittest.TestCase):
     def test_basic(self):
         file = """Hello World!
-Tags: hello world, beginning
+tags: hello world, beginning
 
 Hey fellas! I'm just out here, saying hello world! :)"""
         p = core.Post(StringIO(file))
         self.assertEqual(p.title, "Hello World!")
-        self.assertEqual(len(p.meta), 1)
-        self.assertEqual(p.meta['Tags'], "hello world, beginning")
-        self.assertEqual(p.content, "Hey fellas! I'm just out here, saying hello world! :)")
+        self.assertEqual(p.meta['tags'], ['hello world', 'beginning'])
+        self.assertEqual(p.content_raw, "Hey fellas! I'm just out here, saying hello world! :)")
 
     def test_write(self):
         output = """Hello World!
-Tags: hello world, beginning
+tags: hello world, beginning
 
 Hey fellas! I'm just out here, saying hello world! :)"""
         p = core.Post()
         p.title = "Hello World!"
-        p.meta['Tags'] = "hello world, beginning"
-        p.content = "Hey fellas! I'm just out here, saying hello world! :)"
+        p.meta['tags'] = ['hello world', 'beginning']
+        p.content_raw = "Hey fellas! I'm just out here, saying hello world! :)"
         so = StringIO()
         p.to_file(so)
         self.assertEqual(so.getvalue(),output)
@@ -34,9 +34,9 @@ class TestBlog(unittest.TestCase):
         test_dir = os.path.join(os.path.dirname(__file__), "sample-blog")
         blog = core.Blog(test_dir)
 
-        self.assertEqual(len(blog.posts), 1)
+        self.assertEqual(len(blog.posts), 2)
         self.assertEqual(blog.settings['theme'], 'simpl')
-        self.assertEqual(len(blog.settings), 1)
+        self.assertEqual(len(blog.settings), 2)
 
 class TestConfig(unittest.TestCase):
     def test_basic(self):
