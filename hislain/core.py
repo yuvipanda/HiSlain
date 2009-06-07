@@ -1,7 +1,30 @@
 import yaml
 import os
 
+from datetime import datetime
+from dateutil import parser
+
 from jinja2 import Environment, FileSystemLoader
+
+import utils
+
+post_meta_defaults = {
+#        meta name  : (type, default value)
+        'published' : (datetime, lambda p: datetime.now()),
+        'permalink' : (unicode, lambda p: utils.slugify(p.title)),
+        'tags'      : (list, []),
+        }
+
+def _parsetype(type, data):
+    if type is datetime:
+        return parser.parse(data)
+    elif type is str:
+        return unicode(data, encoding='UTF-8')
+    elif type is list:
+        return [i.strip() for i in data.split(',')]
+    else:
+        return data
+
 
 class Post():
     def __init__(self, file=None):
@@ -23,7 +46,17 @@ class Post():
 
             print self.meta
             self.content = file.read().rstrip()
-    
+
+            # Set in default values, and parse according to type
+            for k, v in post_meta_defaults.items():
+                if k in self.meta:
+                    self.meta[k] = _parsetype(v[0], self.meta[k])
+                else:
+                    if callable(v[1]):
+                        self.meta[k] = v[1](self)
+                    else:
+                        self.meta[k] = v[1]
+
     def to_file(self, file):
         file.write(self.title + '\n')
         
@@ -33,7 +66,6 @@ class Post():
         file.write('\n')
 
         file.write(self.content)
-
 
 class Blog():
     def __init__(self, dir=None):
@@ -49,6 +81,8 @@ class Blog():
 
             templates_path = os.path.join(themes_path, self.settings.get("theme", "simpl"))
             self.env = Environment(loader=FileSystemLoader(templates_path))
+
+            self.settings['out_path'] = os.path.join(dir, self.settings['out_path'])
         else:
             self.env = None
             self.settings = {}

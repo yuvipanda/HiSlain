@@ -1,0 +1,19 @@
+{% macro single_post(post) %}
+<div class="post-container">
+    <h3 class="post-title">
+        <a href="{{ post.meta.permalink }}">{{ post.title|escape }}</a>
+    </h3>
+    <div class="post-meta">
+        <div class='post-meta-tags'>
+            Tags: {% for t in post.meta.tags %}
+            <a href="/tags/{{ t }}">{{ t }}</a>
+            {% endfor %}
+        </div>
+        <div class='post-meta-published'>
+            Published at {{ post.meta.published }}
+        </div>
+    </div>
+    <div class="post-content">
+        {{ post.content|escape }}
+    </div>
+{% endmacro %}

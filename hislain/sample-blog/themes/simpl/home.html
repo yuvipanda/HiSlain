@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "macros.html" import single_post %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+<div id="posts">
+    {% for p in posts %}
+        {{ single_post (p) }}
+        {% endfor %}
+</div>
+{% endblock %}
