@@ -1,10 +1,11 @@
-import yaml
 import os
 
 from datetime import datetime
 from dateutil import parser
 
 from jinja2 import Environment, FileSystemLoader
+import yaml
+import markdown
 
 import utils
 
@@ -44,8 +45,8 @@ class Post():
                 self.meta[key] = value
                 l = file.readline()
 
-            print self.meta
-            self.content = file.read().rstrip()
+            self.raw_content = file.read().rstrip()
+            self.content = markdown.markdown(self.raw_content)
 
             # Set in default values, and parse according to type
             for k, v in post_meta_defaults.items():
@@ -65,7 +66,7 @@ class Post():
 
         file.write('\n')
 
-        file.write(self.content)
+        file.write(self.raw_content)
 
 class Blog():
     def __init__(self, dir=None):
