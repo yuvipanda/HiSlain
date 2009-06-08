@@ -41,6 +41,26 @@ def publish(blog):
     #Publish Yearly Archives
 
     #Publish Tag pages
+    tags = {}
+    for p in blog.posts:
+        for t in p.meta['tags']:
+            if t in tags:
+                tags[t].append(p)
+            else:
+                tags[t] = [p]
+
+    for t in tags:
+        posts = sorted(tags[t], key=lambda p: p.meta['published'])
+        title = "Posts Tagged %s" % t
+        output_path = "tag/%s" % t
+        publish_posts(
+                posts, 
+                blog.env.get_template("posts.html"), 
+                blog.settings, 
+                output_path, 
+                title=title
+                )
+        print "Published Tag Page for %s" % t
 
 if __name__ == '__main__':
     path = sys.argv[1]
