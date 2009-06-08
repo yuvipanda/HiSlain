@@ -87,12 +87,18 @@ class Blog():
                     for post_file in os.listdir(posts_dir)
                     ]
 
+            pages_dir = os.path.join(dir, self.settings.get("pagespath", "pages"))
+            self.pages = [
+                    Post(file(os.path.join(pages_dir, page_file))) 
+                    for page_file in os.listdir(pages_dir)
+                    ]
+
             themes_path = os.path.join(dir, self.settings.get("themespath","themes"))
 
             templates_path = os.path.join(themes_path, self.settings.get("theme", "simpl"))
             self.env = Environment(loader=FileSystemLoader(templates_path))
 
-            self.settings['out_path'] = os.path.join(dir, self.settings['out_path'])
+            self.settings['out_path'] = os.path.join(dir, self.settings.get('out', 'out'))
         else:
             self.env = None
             self.settings = {}

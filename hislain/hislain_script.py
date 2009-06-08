@@ -22,7 +22,7 @@ def publish(blog):
     #Publish Posts
     for p in blog.posts:
         publish_post(p, blog.env.get_template('post.html'), blog.settings)
-        print "Published %s" % p.title
+        print "Published Post %s" % p.title
 
     #Publish RSS
 
@@ -32,9 +32,11 @@ def publish(blog):
     print "Published Home page"
   
     #Publish Pages
+    for p in blog.pages:
+        publish_post(p, blog.env.get_template('post.html'), blog.settings)
+        print "Published Page %s" % p.title
 
     #Publish Monthly Archives
-
 
     #Publish Yearly Archives
 
