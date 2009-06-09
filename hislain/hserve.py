@@ -1,22 +1,26 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import os
+import sys
+
+serve_from = os.curdir
 
 class HTTPHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        print "Getting %s" % os.path.join(os.curdir, self.path.lstrip('/'))
-        if not os.path.exists(os.path.join(os.curdir, self.path.lstrip('/'))):
+        if not os.path.exists(os.path.join(serve_from, self.path.lstrip('/'))):
             self.send_error(404, 'File not Found')
             return        
         self.send_response(200)
         if not (self.path.startswith("/static") or self.path.endswith('.css')):
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
-        f = file(os.path.join(os.curdir, self.path.lstrip('/')))
+        f = file(os.path.join(serve_from, self.path.lstrip('/')))
         self.wfile.write(f.read())
         return
 
 if __name__ == '__main__':
-    server = HTTPServer(('', 8090), HTTPHandler)
+    serve_from = sys.argv[1]
+    serve_port = int(sys.argv[2])
+    server = HTTPServer(('', serve_port), HTTPHandler)
     server.serve_forever()
 
 
