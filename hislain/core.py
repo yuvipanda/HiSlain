@@ -97,7 +97,7 @@ class Blog():
 
             templates_path = os.path.join(themes_path, self.settings.get("theme", "simpl"))
             self.env = Environment(loader=FileSystemLoader(templates_path))
-
+            self.settings['theme_path'] = templates_path            
             self.settings['out_path'] = os.path.join(dir, self.settings.get('out', 'out'))
         else:
             self.env = None

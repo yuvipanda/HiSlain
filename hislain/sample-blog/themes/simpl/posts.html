@@ -7,6 +7,6 @@
 
 {% block content %}
     {% for p in posts %}
-        {{ single_post (p) }}
+        {{ single_post (p, settings) }}
     {% endfor %}
 {% endblock %}

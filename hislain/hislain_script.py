@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 
 from dateutil import parser
 from datetime import datetime
@@ -19,7 +20,15 @@ def publish_posts(posts, template, settings, output_path, **kwargs):
     _write_template(template, output_path, posts=posts, settings=settings, **kwargs)
 
 def publish(blog):
-    #Publish Posts
+  # Move the static files
+    from_static = os.path.join(blog.settings['theme_path'], 'static')
+    to_static = os.path.join(blog.settings['out_path'], 'static')
+    if os.path.exists(to_static):
+        shutil.rmtree(to_static)
+    shutil.copytree(from_static, to_static)
+
+    print "Copied /static"
+  # Publish Posts
     for p in blog.posts:
         publish_post(p, blog.env.get_template('post.html'), blog.settings)
         print "Published Post %s" % p.title
@@ -31,16 +40,16 @@ def publish(blog):
     publish_posts(home_posts, blog.env.get_template('posts.html'), blog.settings, output_path='home', title='Home Page', permalink='/')
     print "Published Home page"
   
-    #Publish Pages
+    # Publish Pages
     for p in blog.pages:
         publish_post(p, blog.env.get_template('post.html'), blog.settings)
         print "Published Page %s" % p.title
 
-    #Publish Monthly Archives
+    # Publish Monthly Archives
 
-    #Publish Yearly Archives
+    # Publish Yearly Archives
 
-    #Publish Tag pages
+    # Publish Tag pages
     tags = {}
     for p in blog.posts:
         for t in p.meta['tags']:
@@ -61,6 +70,9 @@ def publish(blog):
                 title=title
                 )
         print "Published Tag Page for %s" % t
+
+        
+
 
 if __name__ == '__main__':
     path = sys.argv[1]
