@@ -10,6 +10,8 @@ import utils
 
 def _write_template(template, filepath, settings, **kwargs):
     file_path = os.path.join(settings['out_path'], filepath)
+    if not os.path.exists(os.path.dirname(file_path)):
+        os.makedirs(os.path.dirname(file_path))
     out_file = file(file_path, 'w')
     out_file.write(template.render(dict(settings=settings,**kwargs)))
 
@@ -70,9 +72,6 @@ def publish(blog):
                 title=title
                 )
         print "Published Tag Page for %s" % t
-
-        
-
 
 if __name__ == '__main__':
     path = sys.argv[1]
