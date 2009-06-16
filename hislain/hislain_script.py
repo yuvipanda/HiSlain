@@ -24,14 +24,18 @@ def publish_posts(posts, template, settings, output_path, **kwargs):
     _write_template(template, output_path, posts=posts, settings=settings, **kwargs)
 
 def publish(blog):
-  # Move the static files
-    from_static = os.path.join(blog.settings['theme_path'], 'static')
-    to_static = os.path.join(blog.settings['out_path'], 'static')
-    if os.path.exists(to_static):
-        shutil.rmtree(to_static)
-    shutil.copytree(from_static, to_static)
+  # Move the static & media files
+    to_move = [ (os.path.join(blog.settings['theme_path'], 'static'),
+                 os.path.join(blog.settings['out_path'], 'static')),
+                (blog.settings['media_path'],
+                 os.path.join(blog.settings['out_path'], 'media'))
+              ]
+    for f, t in to_move:
+        if os.path.exists(t):
+            shutil.rmtree(t)
+        shutil.copytree(f, t)
+        print "Copied %s" % t
 
-    print "Copied /static"
   # Publish Posts
     for p in blog.posts:
         publish_post(p, blog.env.get_template('post.html'), blog.settings)

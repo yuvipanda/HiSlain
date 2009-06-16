@@ -99,6 +99,7 @@ class Blog():
             self.env = Environment(loader=FileSystemLoader(templates_path))
             self.settings['theme_path'] = templates_path            
             self.settings['out_path'] = os.path.join(dir, self.settings.get('out', 'out'))
+            self.settings['media_path'] = os.path.join(dir, self.settings.get('media', 'media'))
         else:
             self.env = None
             self.settings = {}
