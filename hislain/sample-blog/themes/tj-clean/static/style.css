@@ -259,6 +259,14 @@ padding : 0;
 color : #FF6600;
 border : none;
 }
+.projects {
+text-align : left;
+width : 690px;
+padding : 10px 10pt 10px 10px;
+border-bottom : 1px solid #ccc;
+border-top: 1px solid #ccc;
+}
+
 .status {
 text-align : left;
 width : 690px;

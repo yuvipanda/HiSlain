@@ -12,7 +12,7 @@ import utils
 post_meta_defaults = {
 #        meta name  : (type, default value)
         'published' : (datetime, lambda p: datetime.now()),
-        'permalink' : (unicode, lambda p: utils.slugify(p.title)),
+        'permalink' : (unicode, lambda p: utils.slugify(p.title) + '.html'),
         'tags'      : (list, []),
         }
 
@@ -100,6 +100,7 @@ class Blog():
             self.settings['theme_path'] = templates_path            
             self.settings['out_path'] = os.path.join(dir, self.settings.get('out', 'out'))
             self.settings['media_path'] = os.path.join(dir, self.settings.get('media', 'media'))
+            self.settings['blog_dir'] = dir
         else:
             self.env = None
             self.settings = {}

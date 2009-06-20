@@ -44,7 +44,7 @@ def publish(blog):
 
     #Publish Home Page
     home_posts = sorted(blog.posts, key=lambda p: p.meta['published'])[:5]
-    publish_posts(home_posts, blog.env.get_template('posts.html'), blog.settings, output_path='home', title='Home Page', permalink='/')
+    publish_posts(home_posts, blog.env.get_template('posts.html'), blog.settings, output_path='index.html', title='Home Page', permalink='/')
     print "Published Home page"
   
     # Publish RSS

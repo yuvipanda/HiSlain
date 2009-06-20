@@ -10,11 +10,13 @@ class HTTPHandler(BaseHTTPRequestHandler):
             self.send_error(404, 'File not Found')
             return        
         self.send_response(200)
-        if not (self.path.startswith("/static") or self.path.endswith('.css')):
+        if not self.path.startswith("/static"):
             self.send_header('Content-Type', 'text/html')
             self.end_headers()
-        f = file(os.path.join(serve_from, self.path.lstrip('/')))
-        self.wfile.write(f.read())
+        f = file(os.path.join(serve_from, self.path.lstrip('/')), 'rb+')
+        s = f.read()
+        print s
+        self.wfile.write(s)
         return
 
 if __name__ == '__main__':
