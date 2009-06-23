@@ -11,9 +11,10 @@ import utils
 
 post_meta_defaults = {
 #        meta name  : (type, default value)
-        'published' : (datetime, lambda p: datetime.now()),
-        'permalink' : (unicode, lambda p: utils.slugify(p.title) + '.html'),
+        'published' : (datetime, lambda p, s: datetime.now()),
+        'permalink' : (unicode, lambda p, s: utils.slugify(p.title) + '.html'),
         'tags'      : (list, []),
+        'container' : (unicode, 'blog'),
         }
 
 def _parsetype(type, data):
@@ -35,7 +36,7 @@ def _dumptype(type, data):
         return data
 
 class Post():
-    def __init__(self, file=None):
+    def __init__(self, file=None, settings=None):
         self.meta = {}
         self.title = ""
         self.content = ""
@@ -61,7 +62,7 @@ class Post():
                     self.meta[k] = _parsetype(v[0], self.meta[k])
                 else:
                     if callable(v[1]):
-                        self.meta[k] = v[1](self)
+                        self.meta[k] = v[1](self, settings)
                     else:
                         self.meta[k] = v[1]
 
@@ -77,13 +78,15 @@ class Post():
 
         file.write(self.content_raw)
 
+
+
 class Blog():
     def __init__(self, dir=None):
         if dir:
             self.settings = read_config(file(os.path.join(dir, "blog.yaml")))
             posts_dir = os.path.join(dir, self.settings.get("postspath", "posts"))
             self.posts = [
-                    Post(file(os.path.join(posts_dir,post_file))) 
+                    Post(file(os.path.join(posts_dir,post_file)), settings=self.settings) 
                     for post_file in os.listdir(posts_dir)
                     ]
 

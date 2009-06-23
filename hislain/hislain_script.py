@@ -65,7 +65,7 @@ def publish(blog):
             lastBuildDate=datetime.now(),
             description=blog.settings['tagline'],
             items=rss_posts )
-    rss_file = file(os.path.join(blog.settings['out_path'],'feed'),'w')
+    rss_file = file(os.path.join(blog.settings['out_path'], 'feed'), 'w')
     rss.write_xml(rss_file)
     rss_file.close()
     print "Published RSS Feed"
