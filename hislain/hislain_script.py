@@ -4,8 +4,10 @@ import shutil
 
 from dateutil import parser
 from datetime import datetime
+from hashlib import md5
 
 import PyRSS2Gen as RSS2
+import yaml
 
 import core
 import utils
@@ -24,6 +26,23 @@ def publish_posts(posts, template, settings, output_path, **kwargs):
     _write_template(template, output_path, posts=posts, settings=settings, **kwargs)
 
 def publish(blog):
+  # Get currently published blog posts list, if it's there    
+    published_path = os.path.join(blog.settings['blog_dir'], '.published')
+    if not os.path.exists(published_path): 
+        published = {}
+    else:
+        published = yaml.load(file(published_path))
+
+    for p in blog.posts:
+        hash = md5(p.content_raw).hexdigest()
+        if p.source_path in published:
+            if not hash == published[p.source_path]:
+                p.save()
+        else:
+            p.save()
+        published[p.source_path] = hash
+    yaml.dump(published, file(published_path, 'w'))
+
   # Move the static & media files
     to_move = [ (os.path.join(blog.settings['theme_path'], 'static'),
                  os.path.join(blog.settings['out_path'], 'static')),

@@ -36,11 +36,14 @@ def _dumptype(type, data):
         return data
 
 class Post():
-    def __init__(self, file=None, settings=None):
+    def __init__(self, file_path=None, settings=None):
         self.meta = {}
         self.title = ""
         self.content = ""
-        if file:
+        if file_path:
+            self.source_path = file_path
+
+            file = open(file_path, 'r')
             self.title = file.readline().rstrip()
 
             l = file.readline()
@@ -66,6 +69,9 @@ class Post():
                     else:
                         self.meta[k] = v[1]
 
+    def save(self):
+        self.to_file(file(self.source_path, 'w'))
+
     def to_file(self, file):
         file.write(self.title + '\n')
         
@@ -86,13 +92,13 @@ class Blog():
             self.settings = read_config(file(os.path.join(dir, "blog.yaml")))
             posts_dir = os.path.join(dir, self.settings.get("postspath", "posts"))
             self.posts = [
-                    Post(file(os.path.join(posts_dir,post_file)), settings=self.settings) 
+                    Post(os.path.join(posts_dir,post_file), settings=self.settings) 
                     for post_file in os.listdir(posts_dir)
                     ]
 
             pages_dir = os.path.join(dir, self.settings.get("pagespath", "pages"))
             self.pages = [
-                    Post(file(os.path.join(pages_dir, page_file))) 
+                    Post(os.path.join(pages_dir, page_file)) 
                     for page_file in os.listdir(pages_dir)
                     ]
 
