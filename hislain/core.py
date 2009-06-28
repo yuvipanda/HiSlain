@@ -39,7 +39,7 @@ class Post():
         self.meta = {}
         self.title = ""
         self.content = ""
-        if file_path:
+        if file_path:            
             self.source_path = file_path
 
             file = open(file_path, 'r')
@@ -85,7 +85,7 @@ class Post():
 
         file.write('\n')
 
-        file.write(self.content_raw)
+        file.write(self.content)
 
 class Blog():
     def __init__(self, dir=None):
@@ -94,13 +94,15 @@ class Blog():
             posts_dir = os.path.join(dir, self.settings.get("postspath", "posts"))
             self.posts = [
                     Post(os.path.join(posts_dir,post_file), settings=self.settings) 
-                    for post_file in os.listdir(posts_dir)
+                    for post_file in os.listdir(posts_dir) 
+                    if post_file.endswith('.post')
                     ]
 
             pages_dir = os.path.join(dir, self.settings.get("pagespath", "pages"))
             self.pages = [
                     Post(os.path.join(pages_dir, page_file)) 
                     for page_file in os.listdir(pages_dir)
+                    if page_file.endswith('.page')
                     ]
 
             themes_path = os.path.join(dir, self.settings.get("themespath","themes"))
