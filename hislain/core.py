@@ -14,7 +14,6 @@ post_meta_defaults = {
         'published' : (datetime, lambda p, s: datetime.now()),
         'permalink' : (unicode, lambda p, s: utils.slugify(p.title) + '.html'),
         'tags'      : (list, []),
-        'container' : (unicode, 'blog'),
         }
 
 def _parsetype(type, data):
@@ -56,8 +55,7 @@ class Post():
                 self.meta[key] = value
                 l = file.readline()
 
-            self.content_raw = file.read().rstrip()
-            self.content = markdown.markdown(self.content_raw)
+            self.content = file.read().rstrip()
 
             # Set in default values, and parse according to type
             for k, v in post_meta_defaults.items():
@@ -68,6 +66,11 @@ class Post():
                         self.meta[k] = v[1](self, settings)
                     else:
                         self.meta[k] = v[1]
+
+    def render_html(self):
+        if not hasattr(self, 'content_html'):
+            self.content_html = markdown.markdown(self.content)
+        return self.content_html
 
     def save(self):
         self.to_file(file(self.source_path, 'w'))
@@ -83,8 +86,6 @@ class Post():
         file.write('\n')
 
         file.write(self.content_raw)
-
-
 
 class Blog():
     def __init__(self, dir=None):

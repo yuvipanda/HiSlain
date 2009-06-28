@@ -34,7 +34,7 @@ def publish(blog):
         published = yaml.load(file(published_path))
 
     for p in blog.posts:
-        hash = md5(p.content_raw).hexdigest()
+        hash = md5(p.content).hexdigest()
         if p.source_path in published:
             if not hash == published[p.source_path]:
                 p.save()
@@ -71,7 +71,7 @@ def publish(blog):
             RSS2.RSSItem(
                 title=p.title,
                 link=blog.settings['base_url'] + p.meta['permalink'],
-                description=p.content,
+                description=p.render_html(),
                 guid=RSS2.Guid(blog.settings['base_url'] + p.meta['permalink']),
                 pubDate=p.meta['published']
                 )
