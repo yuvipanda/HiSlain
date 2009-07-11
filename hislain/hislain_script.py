@@ -110,7 +110,7 @@ def publish(blog):
     for t in tags:
         posts = sorted(tags[t], key=lambda p: p.meta['published'])
         title = "Posts Tagged %s" % t
-        output_path = "tag/%s" % t
+        output_path = "tag/%s.html" % t
         publish_posts(
                 posts, 
                 blog.env.get_template("posts.html"), 
