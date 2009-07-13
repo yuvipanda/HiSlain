@@ -12,18 +12,18 @@ import yaml
 import core
 import utils
 
-def _write_template(template, filepath, settings, **kwargs):
-    file_path = os.path.join(settings['out_path'], filepath)
+def _write_template(template, filepath, blog, **kwargs):
+    file_path = os.path.join(blog.settings['out_path'], filepath)
     if not os.path.exists(os.path.dirname(file_path)):
         os.makedirs(os.path.dirname(file_path))
     out_file = file(file_path, 'w')
-    out_file.write(template.render(dict(settings=settings,**kwargs)))
+    out_file.write(template.render(dict(settings=blog.settings, hooks=blog.hooks, **kwargs)))
 
-def publish_post(post, template, settings):
-    _write_template(template, post.meta['permalink'], post=post, settings=settings)
+def publish_post(post, template, blog):
+    _write_template(template, post.meta['permalink'], post=post, blog=blog)
    
-def publish_posts(posts, template, settings, output_path, **kwargs):
-    _write_template(template, output_path, posts=posts, settings=settings, **kwargs)
+def publish_posts(posts, template, blog, output_path, **kwargs):
+    _write_template(template, output_path, posts=posts, blog=blog, **kwargs)
 
 def publish(blog):
   # Get currently published blog posts list, if it's there    
@@ -57,13 +57,13 @@ def publish(blog):
 
   # Publish Posts
     for p in blog.posts:
-        publish_post(p, blog.env.get_template('post.html'), blog.settings)
+        publish_post(p, blog.env.get_template('post.html'), blog)
         print "Published Post %s" % p.title
 
 
     #Publish Home Page
     home_posts = sorted(blog.posts, key=lambda p: p.meta['published'])[-10:][::-1]
-    publish_posts(home_posts, blog.env.get_template('posts.html'), blog.settings, output_path='index.html', title='Home Page', permalink='/')
+    publish_posts(home_posts, blog.env.get_template('posts.html'), blog, output_path='index.html', title='Home Page', permalink='/')
     print "Published Home page"
   
     # Publish RSS
@@ -91,7 +91,7 @@ def publish(blog):
 
     # Publish Pages
     for p in blog.pages:
-        publish_post(p, blog.env.get_template('post.html'), blog.settings)
+        publish_post(p, blog.env.get_template('post.html'), blog)
         print "Published Page %s" % p.title
 
     # Publish Monthly Archives
@@ -114,7 +114,7 @@ def publish(blog):
         publish_posts(
                 posts, 
                 blog.env.get_template("posts.html"), 
-                blog.settings, 
+                blog, 
                 output_path, 
                 title=title
                 )

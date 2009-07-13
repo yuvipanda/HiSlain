@@ -1,4 +1,5 @@
 import os
+import imp
 
 from datetime import datetime
 from dateutil import parser
@@ -8,6 +9,7 @@ import yaml
 import markdown
 
 import utils
+from plugins.hooks import Hooker
 
 post_meta_defaults = {
 #        meta name  : (type, default value)
@@ -113,6 +115,13 @@ class Blog():
             self.settings['out_path'] = os.path.join(dir, self.settings.get('out', 'out'))
             self.settings['media_path'] = os.path.join(dir, self.settings.get('media', 'media'))
             self.settings['blog_dir'] = dir
+
+            self.hooks = Hooker()
+            plugins_path = os.path.join(dir, self.settings.get("pluginspath","plugins"))
+            for plugin_file in os.listdir(plugins_path):
+                if plugin_file.endswith('.py'):
+                    plugin = imp.load_source(os.path.basename(plugin_file).split('.')[0], os.path.join(plugins_path,plugin_file))
+                    plugin.main(self)
         else:
             self.env = None
             self.settings = {}
