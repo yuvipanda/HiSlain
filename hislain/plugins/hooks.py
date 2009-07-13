@@ -18,5 +18,5 @@ class Hooker:
         else:
             raise AttributeError(name)
 
-    def string(self, name, *args):
+    def as_string(self, name, *args):
         return "\n".join(self._exec_action(name, *args))
