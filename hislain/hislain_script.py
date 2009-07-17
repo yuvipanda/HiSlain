@@ -48,12 +48,18 @@ def publish(blog):
                  os.path.join(blog.settings['out_path'], 'static')),
                 (blog.settings['media_path'],
                  os.path.join(blog.settings['out_path'], 'media'))
-              ]
+              ]    
     for f, t in to_move:
         if os.path.exists(t):
             shutil.rmtree(t)
         shutil.copytree(f, t)
         print "Copied %s" % t
+
+#   Move files added by plugins
+    for f in blog.hooks.static_files:
+        shutil.copyfile(os.path.join(blog.settings['blog_dir'], f),
+                        os.path.join(blog.settings['out_path'], 'static', os.path.basename(f)))
+
 
   # Publish Posts
     for p in blog.posts:

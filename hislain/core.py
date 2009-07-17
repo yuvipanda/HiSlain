@@ -37,10 +37,11 @@ def _dumptype(type, data):
         return data
 
 class Post():
-    def __init__(self, file_path=None, settings=None):
+    def __init__(self, file_path=None, blog=None):
         self.meta = {}
         self.title = ""
         self.content = ""
+        self.blog = blog
         if file_path:            
             self.source_path = file_path
 
@@ -65,13 +66,13 @@ class Post():
                     self.meta[k] = _parsetype(v[0], self.meta[k])
                 else:
                     if callable(v[1]):
-                        self.meta[k] = v[1](self, settings)
+                        self.meta[k] = v[1](self, self.blog.settings)
                     else:
                         self.meta[k] = v[1]
 
     def render_html(self):
         if not hasattr(self, 'content_html'):
-            self.content_html = markdown.markdown(self.content)
+            self.content_html = self.blog.hooks.as_string("render", self) 
         return self.content_html
 
     def save(self):
@@ -95,14 +96,14 @@ class Blog():
             self.settings = read_config(file(os.path.join(dir, "blog.yaml")))
             posts_dir = os.path.join(dir, self.settings.get("postspath", "posts"))
             self.posts = [
-                    Post(os.path.join(posts_dir,post_file), settings=self.settings) 
+                    Post(os.path.join(posts_dir,post_file), blog=self) 
                     for post_file in os.listdir(posts_dir) 
                     if post_file.endswith('.post')
                     ]
 
             pages_dir = os.path.join(dir, self.settings.get("pagespath", "pages"))
             self.pages = [
-                    Post(os.path.join(pages_dir, page_file)) 
+                    Post(os.path.join(pages_dir, page_file), blog=self) 
                     for page_file in os.listdir(pages_dir)
                     if page_file.endswith('.page')
                     ]
