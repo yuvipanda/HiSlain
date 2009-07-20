@@ -15,7 +15,6 @@ class HTTPHandler(BaseHTTPRequestHandler):
             self.end_headers()
         f = file(os.path.join(serve_from, self.path.lstrip('/')), 'rb+')
         s = f.read()
-        print s
         self.wfile.write(s)
         return
 
@@ -24,6 +23,3 @@ if __name__ == '__main__':
     serve_port = int(sys.argv[2])
     server = HTTPServer(('', serve_port), HTTPHandler)
     server.serve_forever()
-
-
-            
