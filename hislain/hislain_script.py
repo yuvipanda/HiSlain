@@ -100,6 +100,15 @@ def publish(blog):
         publish_post(p, blog.env.get_template('post.html'), blog)
         print "Published Page %s" % p.title
 
+    # Publich Complete Archive
+    publish_posts(
+        sorted(blog.posts, key=lambda p: p.meta['published'])[:][::-1],
+        blog.env.get_template("completearchives.html"),
+        blog,
+        'archives.html'
+        )
+    print "Published Archives page"
+    
     # Publish Monthly Archives
 
     # Publish Yearly Archives
@@ -114,7 +123,7 @@ def publish(blog):
                 tags[t] = [p]
 
     for t in tags:
-        posts = sorted(tags[t], key=lambda p: p.meta['published'])[:][::-1]
+        posts = sorted(tags[t], key=lambda p: p.meta['published'])
         title = "Posts Tagged %s" % t
         output_path = "tag/%s.html" % t
         publish_posts(

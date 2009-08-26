@@ -91,43 +91,39 @@ class Post():
         file.write(self.content)
 
 class Blog():
-    def __init__(self, dir=None):
-        if dir:
-            self.settings = read_config(file(os.path.join(dir, "blog.yaml")))
-            posts_dir = os.path.join(dir, self.settings.get("postspath", "posts"))
-            self.posts = [
-                    Post(os.path.join(posts_dir,post_file), blog=self) 
-                    for post_file in os.listdir(posts_dir) 
-                    if post_file.endswith('.post')
-                    ]
+    def __init__(self, dir):
+        self.settings = read_config(file(os.path.join(dir, "blog.yaml")))
+        posts_dir = os.path.join(dir, self.settings.get("postspath", "posts"))
+        self.posts = [
+            Post(os.path.join(posts_dir,post_file), blog=self) 
+            for post_file in os.listdir(posts_dir) 
+            if post_file.endswith('.post')
+            ]
 
-            pages_dir = os.path.join(dir, self.settings.get("pagespath", "pages"))
-            self.pages = [
-                    Post(os.path.join(pages_dir, page_file), blog=self) 
-                    for page_file in os.listdir(pages_dir)
-                    if page_file.endswith('.page')
-                    ]
+        pages_dir = os.path.join(dir, self.settings.get("pagespath", "pages"))
+        self.pages = [
+            Post(os.path.join(pages_dir, page_file), blog=self) 
+            for page_file in os.listdir(pages_dir)
+            if page_file.endswith('.page')
+            ]
 
-            themes_path = os.path.join(dir, self.settings.get("themespath","themes"))
+        themes_path = os.path.join(dir, self.settings.get("themespath","themes"))
 
-            templates_path = os.path.join(themes_path, self.settings.get("theme", "simpl"))
-            self.env = Environment(loader=FileSystemLoader(templates_path))
-            self.settings['theme_path'] = templates_path            
-            self.settings['out_path'] = os.path.join(dir, self.settings.get('out', 'out'))
-            self.settings['media_path'] = os.path.join(dir, self.settings.get('media', 'media'))
-            self.settings['blog_dir'] = dir
+        templates_path = os.path.join(themes_path, self.settings.get("theme", "simpl"))
+        self.env = Environment(loader=FileSystemLoader(templates_path))
+        self.settings['theme_path'] = templates_path            
+        self.settings['out_path'] = os.path.join(dir, self.settings.get('out', 'out'))
+        self.settings['media_path'] = os.path.join(dir, self.settings.get('media', 'media'))
+        self.settings['blog_dir'] = dir
 
-            self.hooks = Hooker()
-            plugins_path = os.path.join(dir, self.settings.get("pluginspath","plugins"))
-            for plugin_file in os.listdir(plugins_path):
-                if plugin_file.endswith('.py'):
-                    plugin = imp.load_source(os.path.basename(plugin_file).split('.')[0], os.path.join(plugins_path,plugin_file))
-                    plugin.main(self)
-        else:
-            self.env = None
-            self.settings = {}
-            self.posts = []
+        self.hooks = Hooker()
+        plugins_path = os.path.join(dir, self.settings.get("pluginspath","plugins"))
+        for plugin_file in os.listdir(plugins_path):
+            if plugin_file.endswith('.py'):
+                plugin = imp.load_source(os.path.basename(plugin_file).split('.')[0], os.path.join(plugins_path,plugin_file))
+                plugin.main(self)
 
+                    
 def read_config(file):
     return yaml.load(file)
 

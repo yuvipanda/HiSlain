@@ -1,6 +1,7 @@
 class Hooker:
     def __init__(self):
         self.actions = {}
+        self.static_files = [] 
 
     def add_action(self, name, function):
         if name in self.actions:
@@ -20,3 +21,6 @@ class Hooker:
 
     def as_string(self, name, *args):
         return "\n".join(self._exec_action(name, *args))
+    
+    def copy_to_static(self, path):
+        self.static_files.append(path)
