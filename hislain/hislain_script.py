@@ -114,7 +114,7 @@ def publish(blog):
                 tags[t] = [p]
 
     for t in tags:
-        posts = sorted(tags[t], key=lambda p: p.meta['published'])
+        posts = sorted(tags[t], key=lambda p: p.meta['published'])[:][::-1]
         title = "Posts Tagged %s" % t
         output_path = "tag/%s.html" % t
         publish_posts(
