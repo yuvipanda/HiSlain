@@ -36,8 +36,8 @@ def _dumptype(type, data):
     else:
         return data
 
-class Post():
-    def __init__(self, file_path=None, blog=None):
+class Block():
+    def __init__(self, file_path=None, blog=None, default_meta=True):
         self.meta = {}
         self.title = ""
         self.content = ""
@@ -59,16 +59,16 @@ class Post():
                 l = file.readline()
 
             self.content = file.read().rstrip()
-
-            # Set in default values, and parse according to type
-            for k, v in post_meta_defaults.items():
-                if k in self.meta:
-                    self.meta[k] = _parsetype(v[0], self.meta[k])
-                else:
-                    if callable(v[1]):
-                        self.meta[k] = v[1](self, self.blog.settings)
+            if default_meta:
+                # Set in default values, and parse according to type, if default_meta is set
+                for k, v in post_meta_defaults.items():
+                    if k in self.meta:
+                        self.meta[k] = _parsetype(v[0], self.meta[k])
                     else:
-                        self.meta[k] = v[1]
+                        if callable(v[1]):
+                            self.meta[k] = v[1](self, self.blog.settings)
+                        else:
+                            self.meta[k] = v[1]
 
     def render_html(self):
         if not hasattr(self, 'content_html'):
@@ -95,14 +95,14 @@ class Blog():
         self.settings = read_config(file(os.path.join(dir, "blog.yaml")))
         posts_dir = os.path.join(dir, self.settings.get("postspath", "posts"))
         self.posts = [
-            Post(os.path.join(posts_dir,post_file), blog=self) 
+            Block(os.path.join(posts_dir,post_file), blog=self) 
             for post_file in os.listdir(posts_dir) 
             if post_file.endswith('.post')
             ]
 
         pages_dir = os.path.join(dir, self.settings.get("pagespath", "pages"))
         self.pages = [
-            Post(os.path.join(pages_dir, page_file), blog=self) 
+            Block(os.path.join(pages_dir, page_file), blog=self) 
             for page_file in os.listdir(pages_dir)
             if page_file.endswith('.page')
             ]
