@@ -11,12 +11,12 @@ import yaml
 
 import core
 import utils
-
+import codecs
 def _write_template(template, filepath, blog, **kwargs):
     file_path = os.path.join(blog.settings['out_path'], filepath)
     if not os.path.exists(os.path.dirname(file_path)):
         os.makedirs(os.path.dirname(file_path))
-    out_file = file(file_path, 'w')
+    out_file = codecs.open(file_path, 'w', 'utf-8')
     out_file.write(template.render(dict(settings=blog.settings, blog=blog, hooks=blog.hooks, **kwargs)))
 
 def publish_post(post, template, blog):
