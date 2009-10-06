@@ -1,11 +1,3 @@
 HiSlain - Static Blog Publishing System
 
-An extensible (Plugins! Themes!) Blog Publishing System I wrote so I could move http://yuvisense.net off Wordpress. It's written in Python, uses Jinja2 for templating (themes), various markup schemes for markup (there's a markdown plugin, rolling your own should be a 15 minute job), and I publish via a github repo[http://yuvisense.net] (use whatever means you want(FTP/RSYNC))
-
-TODO:
-
-1. Write a better README
-2. Cleanup code
-3. More plugins!
-4. More themes!
-5. Profile code
+Better documentation should be coming soon. Meanwhile, best way to know more is to contact Author (me@yuvi.in)
