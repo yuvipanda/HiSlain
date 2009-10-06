@@ -9,7 +9,7 @@ import yaml
 import markdown
 
 import utils
-from plugins.hooks import Hooker
+from hooks import Hooker
 
 post_meta_defaults = {
 #        meta name  : (type, default value)
