@@ -1,3 +1,13 @@
 HiSlain - Static Blog Publishing System
 
-Better documentation should be coming soon. Meanwhile, best way to know more is to contact Author (me@yuvi.in)
+Installation
+
+1. Use easy_install hislain to install the app
+2. Clone http://github.com/yuvipanda/yuvisense.net
+3. Remove the posts/, pages/ and out/ folders
+4. Modify blog.yaml to suit your blog's preferences
+5. Write your posts in posts/. Use the current posts from yuvisense.net repo as reference
+6. Run hislain /path/to/folder/containing/blog.yaml/ to generate the out/ files
+7. Copy the out/ folder to your web host
+
+This is a v0.1 product and obviously will be getting much better and automated soon :)
