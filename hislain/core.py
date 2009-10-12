@@ -115,7 +115,9 @@ class Blog():
         self.settings['out_path'] = os.path.join(dir, self.settings.get('out', 'out'))
         self.settings['media_path'] = os.path.join(dir, self.settings.get('media', 'media'))
         self.settings['blog_dir'] = dir
-
+        # List's to hold navigational links from the nav_links plugin 
+        self.nav_link_names = []
+        self.nav_link_urls = []
         self.hooks = Hooker()
         plugins_path = os.path.join(dir, self.settings.get("pluginspath","plugins"))
         for plugin_file in os.listdir(plugins_path):
