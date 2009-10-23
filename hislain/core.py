@@ -6,10 +6,10 @@ from dateutil import parser
 
 from jinja2 import Environment, FileSystemLoader
 import yaml
-import markdown
 
 import utils
 from hooks import Hooker
+import coreplugins
 
 post_meta_defaults = {
 #        meta name  : (type, default value)
@@ -73,6 +73,7 @@ class Block():
     def render_html(self):
         if not hasattr(self, 'content_html'):
             self.content_html = self.blog.hooks.as_string("render", self) 
+            
         return self.content_html
 
     def save(self):
@@ -118,11 +119,17 @@ class Blog():
 
         self.hooks = Hooker()
         plugins_path = os.path.join(dir, self.settings.get("pluginspath","plugins"))
+        coreplugins_path = os.path.join(coreplugins.__path__[0])
+        for plugin_file in os.listdir(coreplugins_path):
+            if plugin_file.endswith('.py') and plugin_file != "__init__.py":
+                plugin = imp.load_source(os.path.basename(plugin_file).split('.')[0], os.path.join(coreplugins_path,plugin_file))
+                plugin.main(self)
+       
         for plugin_file in os.listdir(plugins_path):
             if plugin_file.endswith('.py'):
                 plugin = imp.load_source(os.path.basename(plugin_file).split('.')[0], os.path.join(plugins_path,plugin_file))
                 plugin.main(self)
-
+       
                     
 def read_config(file):
     return yaml.load(file)
