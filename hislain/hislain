@@ -35,7 +35,8 @@ def publish(blog):
     else:
         published = yaml.load(file(published_path))
 
-    for p in blog.posts:
+    publishables = blog.posts + blog.pages
+    for p in publishables:
         hash = md5(p.content).hexdigest()
         if p.source_path in published:
             if not hash == published[p.source_path]:
