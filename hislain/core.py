@@ -1,5 +1,6 @@
 import os
 import imp
+import sys
 
 from datetime import datetime
 from dateutil import parser
@@ -9,7 +10,6 @@ import yaml
 
 import utils
 from hooks import Hooker
-import coreplugins
 
 post_meta_defaults = {
 #        meta name  : (type, default value)
@@ -72,7 +72,11 @@ class Block():
 
     def render_html(self):
         if not hasattr(self, 'content_html'):
-            self.content_html = self.blog.hooks.as_string("render", self) 
+            try:
+                self.content_html = self.blog.hooks.as_string("render", self)
+            except KeyError:
+                print "No renderer plugin found!"
+                sys.exit(-1)
             
         return self.content_html
 
@@ -119,11 +123,6 @@ class Blog():
 
         self.hooks = Hooker()
         plugins_path = os.path.join(dir, self.settings.get("pluginspath","plugins"))
-        coreplugins_path = os.path.join(coreplugins.__path__[0])
-        for plugin_file in os.listdir(coreplugins_path):
-            if plugin_file.endswith('.py') and plugin_file != "__init__.py":
-                plugin = imp.load_source(os.path.basename(plugin_file).split('.')[0], os.path.join(coreplugins_path,plugin_file))
-                plugin.main(self)
        
         for plugin_file in os.listdir(plugins_path):
             if plugin_file.endswith('.py'):

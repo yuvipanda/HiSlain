@@ -20,6 +20,8 @@ class Hooker:
             raise AttributeError(name)
 
     def as_string(self, name, *args):
+        if not name in self.actions:
+            raise KeyError('%s hook not found' % name)
         return "\n".join(self._exec_action(name, *args))
     
     def copy_to_static(self, path):
