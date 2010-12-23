@@ -27,7 +27,7 @@ def publish_post(post, template, blog):
 def publish_posts(posts, template, blog, output_path, **kwargs):
     _write_template(template, output_path, posts=posts, blog=blog, **kwargs)
 
-def publish(blog):
+def publish(blog, verbose=True):
   # Get currently published blog posts list, if it's there    
     published_path = os.path.join(blog.settings['blog_dir'], '.published')
     if not os.path.exists(published_path): 
@@ -56,7 +56,8 @@ def publish(blog):
         if os.path.exists(t):
             shutil.rmtree(t)
         shutil.copytree(f, t)
-        print "Copied %s" % t
+        if verbose:
+            print "Copied %s" % t
 
 #   Move files added by plugins
     for f in blog.hooks.static_files:
@@ -67,13 +68,15 @@ def publish(blog):
   # Publish Posts
     for p in blog.posts:
         publish_post(p, blog.env.get_template('post.html'), blog)
-        print "Published Post %s" % p.title
+        if verbose:
+            print "Published Post %s" % p.title
 
 
     #Publish Home Page
     home_posts = sorted(blog.posts, key=lambda p: p.meta['published'])[-10:][::-1]
     publish_posts(home_posts, blog.env.get_template('posts.html'), blog, output_path='index.html', title='Home Page', permalink='/')
-    print "Published Home page"
+    if verbose:
+        print "Published Home page"
   
     # Publish RSS
     rss_posts = [ 
@@ -96,12 +99,14 @@ def publish(blog):
     rss_file = file(os.path.join(blog.settings['out_path'], 'feed'), 'w')
     rss.write_xml(rss_file)
     rss_file.close()
-    print "Published RSS Feed"
+    if verbose:
+        print "Published RSS Feed"
 
     # Publish Pages
     for p in blog.pages:
         publish_post(p, blog.env.get_template('post.html'), blog)
-        print "Published Page %s" % p.title
+        if verbose:
+            print "Published Page %s" % p.title
 
     # Publich Complete Archive
     publish_posts(
@@ -110,7 +115,8 @@ def publish(blog):
         blog,
         'archives.html'
         )
-    print "Published Archives page"
+    if verbose:
+        print "Published Archives page"
     
     # Publish Monthly Archives
 
@@ -136,10 +142,11 @@ def publish(blog):
                 output_path, 
                 title=title
                 )
-        print "Published Tag Page for %s" % t
+        if verbose:
+            print "Published Tag Page for %s" % t
 
 if __name__ == '__main__':
     path = sys.argv[1]
     b = core.Blog(path)
-    publish(b)
+    publish(b, "-v" in sys.argv)
 
